@@ -1,0 +1,11 @@
+﻿global using ERP_Service.ERP.Dtos;
+global using SharedKernel.Core.DDD;
+global using System.ComponentModel.DataAnnotations;
+global using System.ComponentModel.DataAnnotations.Schema;
+global using ERP_Service.ERP.Models;
+global using ERP_Service;
+global using SharedKernel.Core.Extensions;
+global using MediatR;
+global using Carter;
+global using Serilog;
+global using Microsoft.Extensions.DependencyInjection;
