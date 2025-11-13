@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\SharedKernel\SharedKernel.Core\SharedKernel.Core\SharedKernel.Core.csproj" />
-    <ProjectReference Include="..\..\SharedKernel\SharedKernel.Messaging\SharedKernel.Messaging\SharedKernel.Messaging.csproj" />
     <PackageReference Include="EPPlus" Version="8.2.1" />
     <PackageReference Include="ExcelDataReader" Version="3.8.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.1" />

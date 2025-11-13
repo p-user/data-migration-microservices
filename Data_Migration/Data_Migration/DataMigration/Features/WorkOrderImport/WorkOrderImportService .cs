@@ -1,8 +1,13 @@
 ﻿using Data_Migration.Data;
 using Data_Migration.DataMigration.Dtos;
+using Data_Migration.DataMigration.Features.CsvReport;
 using Data_Migration.DataMigration.Features.ExcelReader;
 using Data_Migration.DataMigration.Features.TechnicianImport;
 using Data_Migration.DataMigration.Models;
+using Microsoft.IdentityModel.Logging;
+using Slugify;
+using System.Threading;
+
 
 namespace Data_Migration.DataMigration.Features.WorkOrderImport
 {
@@ -14,8 +19,16 @@ namespace Data_Migration.DataMigration.Features.WorkOrderImport
         private readonly IBulkInsertService _bulkInsert;
         private readonly ITechnicianImportService _technicianService;
         private readonly ILogger<WorkOrderImportService> _logger;
+        private readonly ICsvReportService _csvReportService;
+        private readonly SlugHelper _slugHelper = new SlugHelper(new SlugHelperConfiguration
+        {
+            ForceLowerCase = false,
+            CollapseDashes = false,
+            TrimWhitespace = true
+        });
 
-        public WorkOrderImportService(Data_Migration_Dbcontext context,IExcelReaderService excelReader,INotesParserService notesParser,IBulkInsertService bulkInsert,ITechnicianImportService technicianService,ILogger<WorkOrderImportService> logger)
+
+        public WorkOrderImportService(Data_Migration_Dbcontext context,IExcelReaderService excelReader,INotesParserService notesParser,IBulkInsertService bulkInsert,ITechnicianImportService technicianService,ILogger<WorkOrderImportService> logger, ICsvReportService csvReportService)
         {
             _context = context;
             _excelReader = excelReader;
@@ -23,6 +36,7 @@ namespace Data_Migration.DataMigration.Features.WorkOrderImport
             _bulkInsert = bulkInsert;
             _technicianService = technicianService;
             _logger = logger;
+            _csvReportService = csvReportService;
         }
 
 
@@ -30,6 +44,7 @@ namespace Data_Migration.DataMigration.Features.WorkOrderImport
         {
             var sw = Stopwatch.StartNew();
             var errors = new ConcurrentBag<string>();
+            var successfulRowNumbers = new ConcurrentBag<int>();
 
             _logger.LogInformation("Starting work order import from: {FilePath}", filePath);
 
@@ -82,10 +97,26 @@ namespace Data_Migration.DataMigration.Features.WorkOrderImport
 
                 // Map to final entities
                 _logger.LogInformation("Mapping to work order entities...");
+                //var workOrders = allProcessed
+                //    .Select(p => MapToWorkOrder(p, techLookup, clientLookup, errors))
+                //    .Where(wo => wo != null)
+                //    .ToList();
+
                 var workOrders = allProcessed
-                    .Select(p => MapToWorkOrder(p, techLookup, clientLookup, errors))
+                    .Select(p =>
+                    {
+                       
+
+                        var wo = MapToWorkOrder(p, techLookup, clientLookup, errors);
+                        if (wo != null)
+                        {
+                            successfulRowNumbers.Add(p.RowNumber);
+                        }
+                        return wo;
+                    })
                     .Where(wo => wo != null)
                     .ToList();
+
 
                 _logger.LogInformation("Mapped {Count:N0} valid work orders", workOrders.Count);
 
@@ -96,6 +127,20 @@ namespace Data_Migration.DataMigration.Features.WorkOrderImport
                 sw.Stop();
 
                 _logger.LogInformation("Work order import completed in {Duration}s",sw.Elapsed.TotalSeconds);
+
+                // Generate report
+                var reportData = new CsvReportData(
+                    ImportDate: DateTime.Now,
+                    SourceFile: Path.GetFileName(filePath),
+                    TotalRows: totalRows,
+                    SuccessfulRows: workOrders.Count,
+                    FailedRows: totalRows - workOrders.Count,
+                    Duration: sw.Elapsed,
+                    Errors: errors.ToList(),
+                    SuccessfulRowNumbers: successfulRowNumbers.OrderBy(r => r).ToList()
+                );
+
+                var reportPath = await _csvReportService.GenerateImportReportAsync(reportData);
 
                 //ToDo: Dispatch event 
                 return new ImportResultDto(
@@ -108,7 +153,7 @@ namespace Data_Migration.DataMigration.Features.WorkOrderImport
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "❌ Work order import failed");
+                _logger.LogError(ex, "Work order import failed");
                 throw;
             }
         }
@@ -162,15 +207,15 @@ namespace Data_Migration.DataMigration.Features.WorkOrderImport
             }
         }
 
-        private async Task<Dictionary<string, int>> GetClientLookupAsync()
+        private async Task<Dictionary<string, int>> GetClientLookupAsync(CancellationToken cancellationToken = default)
         {
             var clients = await _context.Clients
                 .AsNoTracking()
                 .Select(c => new { c.Id, c.FirstName, c.LastName })
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return clients.ToDictionary(
-                c => $"{c.FirstName}|{c.LastName}",
+                c => $"{_slugHelper.GenerateSlug(c.FirstName)}|{_slugHelper.GenerateSlug(c.LastName)}",
                 c => c.Id
             );
         }

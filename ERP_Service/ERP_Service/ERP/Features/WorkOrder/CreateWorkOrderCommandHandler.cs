@@ -33,7 +33,6 @@ namespace ERP_Service.ERP.Features.WorkOrder
                 : 1;
 
             var toBeInserted = Models.WorkOrder.Create(
-                nextWorkOrderId,
                 request.dto.ClientId,
                 request.dto.TechnicianId,
                 request.dto.Notes,

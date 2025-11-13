@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36518.9 d17.14
+VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -23,11 +23,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedKernel", "SharedKerne
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedKernel.Core", "SharedKernel.Core", "{DCD9CFC1-E504-4832-8957-89D2EDA71F48}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedKernel.Messaging", "SharedKernel.Messaging", "{79C620B0-BEC5-4A0B-A5D2-5E69264E0FA2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel.Messaging", "SharedKernel\SharedKernel.Messaging\SharedKernel.Messaging\SharedKernel.Messaging.csproj", "{474EE035-406F-4E8E-B1DD-5B17E47DB1C7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel.Core", "SharedKernel\SharedKernel.Core\SharedKernel.Core\SharedKernel.Core.csproj", "{BBD6492D-02CE-449C-9301-0DDCA9954764}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker-compose", "docker-compose", "{24BEC1B1-5877-4F65-A17A-5E81298BCB76}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.override.yml = docker-compose.override.yml
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +49,6 @@ Global
 		{4A80BD66-DB4B-4480-A659-C3B14C1E7E65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A80BD66-DB4B-4480-A659-C3B14C1E7E65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A80BD66-DB4B-4480-A659-C3B14C1E7E65}.Release|Any CPU.Build.0 = Release|Any CPU
-		{474EE035-406F-4E8E-B1DD-5B17E47DB1C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{474EE035-406F-4E8E-B1DD-5B17E47DB1C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{474EE035-406F-4E8E-B1DD-5B17E47DB1C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{474EE035-406F-4E8E-B1DD-5B17E47DB1C7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BBD6492D-02CE-449C-9301-0DDCA9954764}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BBD6492D-02CE-449C-9301-0DDCA9954764}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBD6492D-02CE-449C-9301-0DDCA9954764}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -67,8 +65,6 @@ Global
 		{1854B99B-45DE-4EF3-A248-69C4FC12F2C5} = {4783D68E-8D70-43C0-88D2-9E6F63E995F2}
 		{4A80BD66-DB4B-4480-A659-C3B14C1E7E65} = {1854B99B-45DE-4EF3-A248-69C4FC12F2C5}
 		{DCD9CFC1-E504-4832-8957-89D2EDA71F48} = {E6E7B97B-D20B-48D8-AB69-96DBFDF325A6}
-		{79C620B0-BEC5-4A0B-A5D2-5E69264E0FA2} = {E6E7B97B-D20B-48D8-AB69-96DBFDF325A6}
-		{474EE035-406F-4E8E-B1DD-5B17E47DB1C7} = {79C620B0-BEC5-4A0B-A5D2-5E69264E0FA2}
 		{BBD6492D-02CE-449C-9301-0DDCA9954764} = {DCD9CFC1-E504-4832-8957-89D2EDA71F48}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

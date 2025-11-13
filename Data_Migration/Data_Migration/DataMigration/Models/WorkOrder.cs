@@ -10,5 +10,6 @@
         public string Notes { get; set; } = string.Empty;
         [Column(TypeName = "decimal(18,2)")]
         public decimal Total { get; set; }
+        public bool IsPushedToErp { get; set; } = false;
     }
 }

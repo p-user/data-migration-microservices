@@ -16,7 +16,8 @@
         DateTime ServiceDate,
         string Notes,
         decimal Total,
-        int RowNumber
+        int RowNumber,
+        bool IsPushedToErp = false
     );
 
 }

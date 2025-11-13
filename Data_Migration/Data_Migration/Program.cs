@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using MassTransit;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,8 +26,17 @@ builder.Services.AddMediatRExtension(assembly);
 
 
 
-//Add Masstransit
-//builder.Services.AddMassTransit(assembly);
+//Add MassTransit with EF Outbox
+builder.Services.AddMassTransit<Data_Migration_Dbcontext>(
+    builder.Configuration,
+    assembly,
+    dbOutboxConfig =>
+    {
+        dbOutboxConfig.UseSqlServer();
+        dbOutboxConfig.UseBusOutbox();
+    }
+);
+
 
 
 

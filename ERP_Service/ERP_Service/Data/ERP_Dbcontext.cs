@@ -1,5 +1,8 @@
 ﻿
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace ERP_Service.Data
 {
@@ -13,7 +16,31 @@ namespace ERP_Service.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.HasDefaultSchema("ERP");
+            builder.Entity<Client>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd(); 
+            });
+
+            builder.Entity<WorkOrder>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd(); 
+            });
+
+            builder.Entity<Technician>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd(); 
+            });
+
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            builder.AddOutboxStateEntity();
+            builder.AddInboxStateEntity();
+            builder.AddOutboxMessageEntity();
             base.OnModelCreating(builder);
         }
     }

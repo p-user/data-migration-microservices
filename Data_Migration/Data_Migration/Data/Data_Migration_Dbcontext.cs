@@ -1,6 +1,8 @@
 ﻿
 using Data_Migration.DataMigration.Models;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace Data_Migration.Data
 {
@@ -15,8 +17,13 @@ namespace Data_Migration.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            
+
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            builder.AddOutboxStateEntity();
+            builder.AddInboxStateEntity();
+            builder.AddOutboxMessageEntity();
             base.OnModelCreating(builder);
+
         }
     }
 }

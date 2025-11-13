@@ -28,8 +28,12 @@ namespace ERP_Service
         public static IApplicationBuilder UseServicestoErpServices(this IApplicationBuilder app)
         {
 
+            using var scope = app.ApplicationServices.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<ERP_Dbcontext>();
 
-           
+            db.Database.Migrate(); 
+
+
             return app;
         }
     }

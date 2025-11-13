@@ -1,4 +1,7 @@
 ﻿
+using Data_Migration.DataMigration.Features.CsvReport;
+using Data_Migration.Utilities;
+using Microsoft.Extensions.Hosting;
 using LicenseContext = OfficeOpenXml.LicenseContext;
 
 namespace Data_Migration
@@ -22,13 +25,15 @@ namespace Data_Migration
             });
             // Core services
             services.AddSingleton<IExcelReaderService, ParallelExcelReaderService>();
+            services.AddSingleton<ICsvReportService, CsvReportService>();
             services.AddScoped<IClientImportService, ClientImportService>();
             services.AddScoped<ITechnicianImportService, TechnicianImportService>();
             services.AddScoped<IWorkOrderImportService, WorkOrderImportService>();
             services.AddScoped<INotesParserService, NotesParserService>();
             services.AddScoped<IBulkInsertService, BulkInsertService>();
-            ExcelPackage.License.SetNonCommercialPersonal("My Name");
-            //ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            ExcelPackage.License.SetNonCommercialPersonal("My Name");//thats not by default
+            services.AddHostedService<MigrationBackgroundWorker>();
+           services.AddScoped<IDataMigrationService, DataMigrationService>();
 
             return services;
         }

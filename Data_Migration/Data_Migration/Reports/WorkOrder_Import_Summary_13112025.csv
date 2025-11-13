@@ -1,0 +1,9 @@
+Import Date,13-11-2025 14:50:02
+Source File,WorkOrders.xlsx
+Total Rows Processed,104
+Successfully Inserted,23
+Failed Rows,81
+Duration (seconds),1.57
+
+Error Type,Count
+Missing Client,81

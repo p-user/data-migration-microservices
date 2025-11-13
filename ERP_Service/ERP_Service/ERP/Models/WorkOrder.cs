@@ -12,19 +12,16 @@
 
         public decimal Total { get; set; }
 
-        public DateTime WorkDate { get; set; }
+        public DateTime? WorkDate { get; set; }
 
-        public bool IsValid { get; set; }
+        public bool? IsValid { get; set; }
         public string? ErrorMessage { get; set; }
 
         private WorkOrder() { }
 
-        public static WorkOrder Create(int workOrderId,int clientId,int technicianId,string notes,decimal total,DateTime workDate)
+        public static WorkOrder Create(int clientId,int technicianId,string notes,decimal total,DateTime workDate)
         {
-            if (workOrderId <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(workOrderId), "WorkOrder ID must be positive.");
-            }
+            
             if (clientId <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(clientId), "Client ID must be positive.");
@@ -52,7 +49,7 @@
 
             return new WorkOrder
             {
-                //Id = workOrderId,
+                
                 ClientId = clientId,
                 TechnicianId = technicianId,
                 Notes = notes,
